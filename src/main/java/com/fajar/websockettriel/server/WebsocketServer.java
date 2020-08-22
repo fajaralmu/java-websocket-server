@@ -31,6 +31,12 @@ public class WebsocketServer {
 		logger.info("Connected ... " + session.getId());
 		
 		SESSION_MAP.put(session.getId(), session);
+		try {
+			session.getBasicRemote().sendText("[ID]"+session.getId());
+		} catch (IOException e) {
+			 
+			e.printStackTrace();
+		}
 		
 		logger.info("Current Connected: "+SESSION_MAP.size());
 
@@ -61,7 +67,7 @@ public class WebsocketServer {
 			System.out.println("NOT a Message DTO: "+ session.getId());
  
 			try {
-				session.getBasicRemote().sendText(session.getId());
+				session.getBasicRemote().sendText(message);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -83,6 +89,7 @@ public class WebsocketServer {
 		 Session destinationSession = SESSION_MAP.get(destination);
 		 if(null == destinationSession) {
 			 System.out.println("destinationSession is NULL");
+			 sender.getBasicRemote().sendText("Destination ("+destination+") NOT FOUND");
 			 return;
 		 }
 		 destinationSession.getBasicRemote().sendText(newMsg);
