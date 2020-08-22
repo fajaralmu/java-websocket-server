@@ -47,16 +47,7 @@ public class WebsocketServer {
 		System.out.println("SERVER ONMessage [" + session.getId() + "]: " + message);
 		if (message.equals("quit")) {
 
-			try {
-
-				session.close(new CloseReason(CloseCodes.NORMAL_CLOSURE, "Game ended"));
-
-			} catch (IOException e) {
-
-				throw new RuntimeException(e);
-
-			}
-
+			this.disconnect(session);
 		}
 
 		try {
@@ -78,6 +69,22 @@ public class WebsocketServer {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
+
+	}
+
+	private void disconnect(Session session) {
+		 
+		try {
+
+			session.close(new CloseReason(CloseCodes.NORMAL_CLOSURE, "Game ended"));
+			SESSION_MAP.remove(session.getId());
+			System.out.println("DISCONNECTED: "+session.getId());
+
+		} catch (IOException e) {
+
+			throw new RuntimeException(e);
+
+		}
 
 	}
 
